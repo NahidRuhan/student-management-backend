@@ -10,12 +10,14 @@ import {
   ParseUUIDPipe,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { StudentsService } from './students.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { QueryStudentsDto } from './dto/query-students.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('students')
 @Controller('students')
@@ -39,6 +41,7 @@ export class StudentsController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new student' })
   @ApiResponse({ status: 201, description: 'Student created successfully' })
@@ -49,6 +52,7 @@ export class StudentsController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update a student' })
   @ApiParam({ name: 'id', description: 'Student UUID' })
   @ApiResponse({ status: 200, description: 'Student updated successfully' })
@@ -63,6 +67,7 @@ export class StudentsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete a student' })
   @ApiParam({ name: 'id', description: 'Student UUID' })
   @ApiResponse({ status: 200, description: 'Student deleted successfully' })

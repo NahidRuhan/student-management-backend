@@ -1,6 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+// @ts-ignore
+// because of esModuleInterop mismatch sometimes, let's just ignore the type error if it works at runtime, 
+// OR better yet, let's just require it.
+import cookieParser = require('cookie-parser');
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -8,6 +12,9 @@ async function bootstrap() {
 
   // Global prefix
   app.setGlobalPrefix('api/v1');
+
+  // Cookie parser
+  app.use(cookieParser());
 
   // CORS
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
