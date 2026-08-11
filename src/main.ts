@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, RequestMethod } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 // @ts-ignore
 // because of esModuleInterop mismatch sometimes, let's just ignore the type error if it works at runtime, 
@@ -11,7 +11,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Global prefix
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/v1', {
+    exclude: [{ path: '', method: RequestMethod.GET }],
+  });
 
   // Cookie parser
   app.use(cookieParser());
