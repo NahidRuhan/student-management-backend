@@ -43,6 +43,7 @@ async function bootstrap() {
     .setDescription('Student Management Dashboard API for EduAyna')
     .setVersion('1.0')
     .addTag('students')
+    .addBearerAuth()
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
