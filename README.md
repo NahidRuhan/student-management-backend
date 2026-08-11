@@ -1,65 +1,63 @@
-# EduAyna - Student Management Backend
+# Student Management Backend
 
-This is the backend service for the **EduAyna Student Management Dashboard**, built with **NestJS 11** and **Prisma ORM (v7)**. It provides a RESTful API with PostgreSQL for managing student records.
+## Project Overview
+This is the backend service for the Student Management Dashboard. It provides a RESTful API built with NestJS 11 and Prisma ORM to manage student records. It supports full CRUD operations, pagination, filtering, sorting, and includes robust JWT-based authentication using HTTP-only cookies to secure data modifications.
 
-## Features
-- **NestJS 11** architecture
-- **Prisma 7** ORM with `pg` driver adapter
-- **PostgreSQL** database (Local or NeonDB)
-- **Validation**: Strict DTO validation with `class-validator`
-- **Swagger Docs**: Auto-generated OpenAPI documentation
-- **Pagination, Sorting, & Filtering**: Built-in support on the `/students` endpoint
+## Requirements
+To run this project, you will need:
+- Node.js (v18 or higher)
+- PostgreSQL (Local instance or a cloud provider like NeonDB)
 
-## Getting Started
-
-### 1. Prerequisites
-- Node.js (v18+)
-- PostgreSQL (Local) OR a NeonDB connection string
-
-### 2. Installation
+## Installation
+First, install all necessary dependencies using npm:
 ```bash
 npm install
 ```
 
-### 3. Environment Setup
-Create a `.env` file in the root directory and configure your database URL:
+## Environment Variables
+Create a `.env` file in the root of the project directory based on the following template. **Do not commit real credentials or secrets to version control.**
+
 ```env
-# PostgreSQL connection string
-DATABASE_URL=postgresql://username:password@localhost:5432/eduayna?schema=public
+# The connection string for your PostgreSQL database
+DATABASE_URL="postgresql://username:password@localhost:5432/eduayna?schema=public"
 
-# Frontend URL for CORS
-FRONTEND_URL=http://localhost:3000
-
-# Server port
+# The port on which the backend server will run
 PORT=4000
+
+# Used to configure CORS allowing the frontend to communicate with the backend
+FRONTEND_URL="http://localhost:3000"
+
+# Secret key for signing JWT tokens (should be a long random string in production)
+JWT_SECRET="super_secret_jwt_key_here"
 ```
 
-### 4. Database Setup
-Run the Prisma migrations and seed the database with sample data:
+## Database Setup
+The database schema is defined in `prisma/schema.prisma`.
+To create the tables in your database and apply the initial migration history, run:
 ```bash
 npx prisma generate
-npx prisma db push
+npx prisma migrate dev --name init
+```
+
+If you wish to seed the database with dummy students to get started quickly, run:
+```bash
 npm run prisma:seed
 ```
-*(Note: Prisma 7 uses `prisma.config.ts` for configuration, so the database URL is resolved from there.)*
 
-### 5. Running the App
+## Running the Application
+To run the server in development mode with hot-reloading:
 ```bash
-# Development
 npm run start:dev
-
-# Production
-npm run build
-npm run start:prod
 ```
 
-## API Documentation
-Once the server is running, visit the Swagger UI to interact with the API:
-👉 **[http://localhost:4000/api/docs](http://localhost:4000/api/docs)**
+## Available Scripts
+Here is a list of important npm scripts provided in this project:
+- `npm run start:dev`: Starts the application in development mode with file watching and hot-reloading.
+- `npm run build`: Compiles the NestJS application into the `dist` folder for production.
+- `npm run start:prod`: Runs the compiled production build from the `dist` folder.
+- `npm run prisma:seed`: Connects to the database and populates it with initial seed data.
 
-## Available Endpoints (Prefix: `/api/v1`)
-- `GET /students` - List students (supports `search`, `status`, `class`, `page`, `limit`, `sortBy`, `sortOrder`)
-- `GET /students/:id` - Get a single student by UUID
-- `POST /students` - Create a new student
-- `PATCH /students/:id` - Update an existing student
-- `DELETE /students/:id` - Delete a student
+## Additional Notes
+- **Authentication**: We use `bcryptjs` to hash passwords and `passport-jwt` with an HTTP-Only cookie strategy to securely handle authentication without exposing tokens to client-side scripts.
+- **Validation**: All incoming API requests are strictly validated using `class-validator` and `class-transformer` decorators in our DTOs.
+- **Swagger Documentation**: Once the app is running, you can view the auto-generated OpenAPI documentation by navigating to `http://localhost:4000/api/docs`.
