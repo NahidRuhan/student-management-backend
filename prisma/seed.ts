@@ -1,6 +1,12 @@
 import { PrismaClient, StudentStatus } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+import 'dotenv/config';
 
-const prisma = new PrismaClient();
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 const students = [
   { name: 'Aarav Sharma', email: 'aarav.sharma@eduayna.com', phone: '+8801712345001', class: 'Grade 10', status: StudentStatus.ACTIVE },
